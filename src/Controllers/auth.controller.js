@@ -13,10 +13,10 @@ export async function signin(req , res) {
             const correctPW = bcrypt.compareSync(password, user.password)
             if (!correctPW) return res.status(401).send("Senha incorreta")
             
-            await db.collection("sessions").deleteMany({ userID: user._id })    
+            await db.collection("sessions").deleteMany({ userId: user._id })    
             const token = uuid()
 
-            await db.collection("sessions").insertOne({ token, userID: user._id, user })
+            await db.collection("sessions").insertOne({ token, userId: user._id, user })
             res.status(200).send({token, user})
 
         } catch (err) {
