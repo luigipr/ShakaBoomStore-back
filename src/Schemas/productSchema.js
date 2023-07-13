@@ -1,6 +1,5 @@
 import Joi from "joi";
 
-
 //body: {productId, productImage, price, description, quantity}
 export const productSchema = Joi.object({
     productId: Joi.string().required(),

@@ -5,13 +5,14 @@ export async function addProduct(req, res){
     //body: {productId, productImage, price, description, quantity}
     //session: {userId, token} enviado por res.locals através do middleware validateToken
     const {session} = res.locals;
+    //console.log(session);
     const {productId, productImage, price, description, quantity} = req.body; 
 
     //validar se o price está no formato correto (ex. 56.2)
 
     try{
         await db.collection('shoppingcart').insertOne({
-            //userId: session.userId,
+            userId: session.userId,
             productId,
             productImage,
             price,
@@ -29,6 +30,7 @@ export async function deleteProduct (req, res){
     //body: {productId}
     //session: {userId, token} enviado por res.locals através do middleware validateToken
     const {productId} = req.body;
+    const {session} = res.locals;
     if(!productId) return res.status(404).send('Não tem productId');
     try{
         const result = await db.collection('shoppingcart').deleteOne({
@@ -59,6 +61,18 @@ export async function changeProductQuantity (req, res){
             {$set: updatedQuantity});
         if(result.matchedCount === 0) return res.status(404).send("Este produto não existe no carrinho");
         return res.status(200).send('Produto editado no carrinho com sucesso')
+    }catch (err){
+        return res.status(500).send(err.message);
+    }
+}
+
+export async function getShoppingCartProducts (req,res){
+    //headers: {'Authorization': Bearer token}
+    //session: {userId, token} enviado por res.locals através do middleware validateToken
+    const {session} = res.locals;
+    try{
+        const shoppingCart = await db.collection('shoppingcart').find({userId: session.userId}).toArray();
+        return res.status(200).send(shoppingCart);
     }catch (err){
         return res.status(500).send(err.message);
     }
