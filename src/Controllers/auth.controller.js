@@ -16,8 +16,8 @@ export async function signin(req , res) {
             await db.collection("sessions").deleteMany({ userId: user._id })    
             const token = uuid()
 
-            await db.collection("sessions").insertOne({ token, userId: user._id, user })
-            res.status(200).send({token, user})
+            await db.collection("sessions").insertOne({ token, userId: user._id})
+            res.status(200).send({token, userId: user._id})
 
         } catch (err) {
         res.status(500).send(err.message)
