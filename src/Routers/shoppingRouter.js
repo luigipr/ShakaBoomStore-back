@@ -1,6 +1,7 @@
 import { Router } from "express";
 
-import { addProduct } from "../Controllers/shoppingController.js";
+
+import { addProduct, deleteProduct, changeProductQuantity } from "../Controllers/shoppingController.js";
 import { validateSchema } from "../Middlewares/validateSchema.js";
 import { validateToken } from "../Middlewares/validateToken.js";
 import { productSchema } from "../Schemas/productSchema.js";
@@ -11,6 +12,7 @@ shoppingRouter.post('/shoppingcart', validateToken, validateSchema(productSchema
 //shoppingRouter.post('/shoppingcart', validateProductSchema, addProduct);
 //shoppingRouter.delete('/shoppingcart', validateToken, deleteProduct);
 shoppingRouter.delete('/shoppingcart', deleteProduct);
+shoppingRouter.put('/shoppingcart', changeProductQuantity);
 
 
 export default shoppingRouter;

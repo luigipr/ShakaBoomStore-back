@@ -31,9 +31,34 @@ export async function deleteProduct (req, res){
     const {productId} = req.body;
     if(!productId) return res.status(404).send('Não tem productId');
     try{
-        const result = await db.collection('shoppingcart').deleteOne({productId});
+        const result = await db.collection('shoppingcart').deleteOne({
+            $and: [
+                {productId},
+                {userId: session.userId}
+            ]
+        });
         if(result.deletedCount === 0) return res.sendStatus(404);
         return res.status(200).send('Produto deletado com sucesso!');
+    }catch (err){
+        return res.status(500).send(err.message);
+    }
+}
+
+export async function changeProductQuantity (req, res){
+    //headers: {'Authorization': Bearer token}
+    //body: {productId, quantity}
+    const {productId, quantity} = req.body;
+    if(!productId) return res.status(404).send('Não tem productId');
+    const updatedQuantity = {quantity}
+    try{
+        const result = await db.collection('shoppingcart').updateOne({
+            $and: [
+            {productId},
+            {userId: session.userId}
+            ]}, 
+            {$set: updatedQuantity});
+        if(result.matchedCount === 0) return res.status(404).send("Este produto não existe no carrinho");
+        return res.status(200).send('Produto editado no carrinho com sucesso')
     }catch (err){
         return res.status(500).send(err.message);
     }
