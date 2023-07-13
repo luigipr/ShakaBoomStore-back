@@ -3,7 +3,7 @@ import { newproductSchema } from "../Schemas/newproductSchema.js";
 import { v4 as uuid } from "uuid";
 
 
-export async function getPŕoducts(req, res) {
+export async function getProducts(req, res) {
 
     try {
         const products = await db.collection("products").find().toArray()
