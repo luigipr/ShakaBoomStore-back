@@ -3,7 +3,7 @@ import { MongoClient } from 'mongodb';
 
 dotenv.config();
 
-const mongoClient = new MongoClient(process.env.DATABASE_URL);
+const mongoClient = new MongoClient("mongodb://localhost:27017/shakaBoom");
 export let db;
 mongoClient.connect()
     .then(() => {
