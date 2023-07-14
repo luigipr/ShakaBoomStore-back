@@ -1,6 +1,6 @@
 import bcrypt from "bcrypt"
 import { v4 as uuid } from "uuid"
-import { db } from "../Database/dataBaseConnection";
+import { db } from "../Database/dataBaseConnection.js";
 
 export async function signin(req , res) {
     //sign-in
@@ -16,8 +16,10 @@ export async function signin(req , res) {
             await db.collection("sessions").deleteMany({ userId: user._id })    
             const token = uuid()
 
+
             await db.collection("sessions").insertOne({ token, userId: user._id, username: user.username })
             res.status(200).send({token, userId: user._id, username: user.username})
+
 
         } catch (err) {
         res.status(500).send(err.message)
