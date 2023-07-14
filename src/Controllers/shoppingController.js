@@ -1,3 +1,4 @@
+import dayjs from "dayjs";
 import { db } from "../Database/dataBaseConnection.js";
 
 export async function addProduct(req, res){
@@ -73,6 +74,31 @@ export async function getShoppingCartProducts (req,res){
     try{
         const shoppingCart = await db.collection('shoppingcart').find({userId: session.userId}).toArray();
         return res.status(200).send(shoppingCart);
+    }catch (err){
+        return res.status(500).send(err.message);
+    }
+}
+
+export async function checkout (req, res){
+    //headers: {'Authorization': Bearer token}
+    //session: {userId, token} enviado por res.locals através do middleware validateToken
+    const {session} = res.locals;
+    try{
+        const shoppings = []
+        const shoppingCart = await db.collection('shoppingcart').find({userId: session.userId}).toArray();
+        shoppingCart.forEach(product => {
+            shoppings.push({
+                userId: product.userId,
+                productId: product.productId,
+                productImage: product.productImage,
+                price: product.price,
+                description: product.description,
+                quantity: product.quantity,
+                date: dayjs().format('DD/MM/YYYY')
+            })
+        })
+        await db.collection('checkout').insertMany(shoppings);
+        return res.status(200).send(shoppings);
     }catch (err){
         return res.status(500).send(err.message);
     }
