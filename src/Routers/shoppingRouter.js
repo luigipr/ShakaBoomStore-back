@@ -8,7 +8,7 @@ const shoppingRouter = Router();
 
 
 shoppingRouter.post('/shoppingcart', validateToken, validateSchema(productSchema), addProduct);
-shoppingRouter.delete('/shoppingcart', validateToken, deleteProduct);
+shoppingRouter.delete('/shoppingcart/:productId', validateToken, deleteProduct);
 shoppingRouter.put('/shoppingcart', validateToken, validateSchema(productQuantitySchema), changeProductQuantity);
 shoppingRouter.get('/shoppingcart', validateToken, getShoppingCartProducts);
 

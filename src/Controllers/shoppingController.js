@@ -27,9 +27,9 @@ export async function addProduct(req, res){
 
 export async function deleteProduct (req, res){
     //headers: {'Authorization': Bearer token}
-    //body: {productId}
+    //params: {productId}
     //session: {userId, token} enviado por res.locals através do middleware validateToken
-    const {productId} = req.body;
+    const {productId} = req.params;
     const {session} = res.locals;
     if(!productId) return res.status(404).send('Não tem productId');
     try{
