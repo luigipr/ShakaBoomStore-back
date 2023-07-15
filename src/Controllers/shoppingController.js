@@ -82,7 +82,9 @@ export async function getShoppingCartProducts (req,res){
 export async function checkout (req, res){
     //headers: {'Authorization': Bearer token}
     //session: {userId, token} enviado por res.locals através do middleware validateToken
+    //body: {paymentMethod, address}
     const {session} = res.locals;
+    const {paymentMethod, address} = req.body;
     try{
         const shoppings = []
         const shoppingCart = await db.collection('shoppingcart').find({userId: session.userId}).toArray();
@@ -94,10 +96,13 @@ export async function checkout (req, res){
                 price: product.price,
                 description: product.description,
                 quantity: product.quantity,
-                date: dayjs().format('DD/MM/YYYY')
+                date: dayjs().format('DD/MM/YYYY'),
+                paymentMethod: paymentMethod,
+                address: address
             })
         })
         await db.collection('checkout').insertMany(shoppings);
+        await db.collection('shoppingcart').deleteMany({userId: session.userId});
         return res.status(200).send(shoppings);
     }catch (err){
         return res.status(500).send(err.message);
