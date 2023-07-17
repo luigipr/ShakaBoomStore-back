@@ -1,6 +1,6 @@
 import bcrypt from "bcrypt"
 import { v4 as uuid } from "uuid"
-import { db } from "../Database/dataBaseConnection";
+import { db } from "../Database/dataBaseConnection.js";
 
 export async function signin(req , res) {
     //sign-in
@@ -42,3 +42,4 @@ export async function signup(req, res) {
 		res.status(500).send(err.message)
 	}
 };
+
